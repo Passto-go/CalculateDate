@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纪念日吖</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* 基础样式 */
+        :root {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            line-height: 1.5;
+            font-weight: 400;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 主题样式 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+        }
+        
+        .game-theme {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+        }
+        
+        .dungeon-theme {
+            background: linear-gradient(135deg, #4b1248 0%, #f0c27b 100%);
+        }
+        
+        .birthday-theme {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+        
+        .birthday2-theme {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+        
+        /* 白天模式样式 */
+        .light .gradient-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            min-height: 100vh;
+        }
+        
+        .light .counter-box {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .light .game-theme {
+            background: linear-gradient(135deg, #4fc3f7 0%, #0288d1 50%, #0277bd 100%);
+        }
+        
+        .light .dungeon-theme {
+            background: linear-gradient(135deg, #ba68c8 0%, #ffcc80 100%);
+        }
+        
+        .light .birthday-theme {
+            background: linear-gradient(135deg, #9575cd 0%, #4fc3f7 100%);
+        }
+        
+        .light .birthday2-theme {
+            background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%);
+        }
+        
+        .light .text-white {
+            color: #ffffff !important;
+        }
+        
+        /* 确保页脚文字在所有主题下都清晰可见 */
+        footer {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500 !important;
+        }
+        
+        .light footer {
+            color: #1f2937 !important;
+            font-weight: 600 !important;
+        }
+        
+        /* 确保"总天数"文字在所有主题下都清晰可见 */
+        .days-label {
+            color: white !important;
+            font-weight: bold !important;
+            font-size: 1rem !important;
+        }
+        
+        /* 计数器框样式 */
+        .counter-box {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        /* 自定义动画效果 */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes swordbeat {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        
+        @keyframes numberChange {
+            0% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(-10px); opacity: 0; }
+            51% { opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* 应用动画类 */
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        .sword-beat {
+            animation: swordbeat 1.5s ease-in-out infinite;
+        }
+        
+        .number-change {
+            animation: numberChange 0.5s ease-out;
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 响应式字体大小 */
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px;
+            }
+        }
+        
+        /* 数字显示容器 */
+        .number-container {
+            height: 2.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen flex flex-col items-center p-4 transition-colors duration-300">
+    <!-- 页面标题和主题切换 -->
+    <div class="w-full max-w-7xl flex justify-between items-center my-8 px-4">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg text-white">
+                纪念日吖
+            </h1>
+        </div>
+        
+        <!-- 主题切换按钮 -->
+        <button id="theme-toggle" class="p-3 rounded-full bg-yellow-400 text-gray-900 shadow-lg" aria-label="切换到白天模式">
+            <i class="fas fa-sun text-xl"></i>
+        </button>
+    </div>
+    
+    <!-- 计时器容器 - 2x2网格布局 -->
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <!-- 我们一起打怪计时器 -->
+        <div class="game-theme rounded-xl shadow-2xl overflow-hidden p-6 text-center">
+            <div class="sword-beat text-6xl text-yellow-400 mb-6">
+                <i class="fas fa-swords"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">距离我们一起打怪已经</h1>
+            <p class="text-white mb-8">2020年12月23日</p>
+            
+            <div class="grid grid-cols-5 gap-4 mb-8">
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer1-years" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">年</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer1-months" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">月</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer1-days" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">日</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer1-hours" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">小时</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer1-seconds" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">秒</div>
+                </div>
+            </div>
+
+             <div class="bg-black bg-opacity-30 p-4 rounded-lg mb-6">
+                  <div class="text-xl font-semibold text-yellow-300">总天数 <span id="timer1-total-days">0</span> 天</div>
+             </div>
+
+         <div class="text-gray-300 text-sm">
+             <p>现在是 <span id="timer1-current-time" class="font-medium text-white"></span> (GMT+8)</p>
+         </div>
+        </div>
+        
+        <!-- 距离你打副本已经 -->
+        <div class="dungeon-theme rounded-xl shadow-2xl overflow-hidden p-6 text-center">
+            <div class="text-6xl text-white mb-6">
+                <i class="fas fa-dungeon"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">距离你打副本已经</h1>
+            <p class="text-white mb-8">2025年11月28日</p>
+            
+            <div class="grid grid-cols-5 gap-4 mb-8">
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer2-years" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">年</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer2-months" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">月</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer2-days" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">日</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer2-hours" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">小时</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer2-seconds" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">秒</div>
+                </div>
+            </div>
+
+             <div class="bg-black bg-opacity-30 p-4 rounded-lg mb-6">
+                  <div class="text-xl font-semibold text-yellow-300">总天数 <span id="timer2-total-days">0</span> 天</div>
+             </div>
+
+         <div class="text-gray-300 text-sm">
+             <p>现在是 <span id="timer2-current-time" class="font-medium text-white"></span> (GMT+8)</p>
+         </div>
+        </div>
+        
+        <!-- 距离你破蛋已经 -->
+        <div class="birthday-theme rounded-xl shadow-2xl overflow-hidden p-6 text-center">
+            <div class="text-6xl text-white mb-6">
+                <i class="fas fa-birthday-cake"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">距离你破蛋已经</h1>
+            <p class="text-white mb-8">1996年7月1日 (农历1996年5月16日)</p>
+            
+            <div class="grid grid-cols-5 gap-4 mb-8">
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer3-years" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">年</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer3-months" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">月</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer3-days" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">日</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer3-hours" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">小时</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer3-seconds" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">秒</div>
+                </div>
+            </div>
+
+             <div class="bg-black bg-opacity-30 p-4 rounded-lg mb-6">
+                  <div class="text-xl font-semibold text-yellow-300">总天数 <span id="timer3-total-days">0</span> 天</div>
+             </div>
+
+         <div class="text-gray-300 text-sm">
+             <p>现在是 <span id="timer3-current-time" class="font-medium text-white"></span> (GMT+8)</p>
+         </div>
+        </div>
+        
+        <!-- 距离我破蛋已经 -->
+        <div class="birthday2-theme rounded-xl shadow-2xl overflow-hidden p-6 text-center">
+            <div class="text-6xl text-white mb-6">
+                <i class="fas fa-gift"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2">距离我破蛋已经</h1>
+            <p class="text-white mb-8">1993年8月7日 (农历1993年6月20日)</p>
+            
+            <div class="grid grid-cols-5 gap-4 mb-8">
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer4-years" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">年</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer4-months" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">月</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer4-days" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">日</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer4-hours" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">小时</div>
+                </div>
+                <div class="counter-box p-4 rounded-lg">
+                    <div id="timer4-seconds" class="number-container">
+                        <div class="text-3xl font-bold text-white">0</div>
+                    </div>
+                    <div class="text-sm text-gray-300">秒</div>
+                </div>
+            </div>
+
+             <div class="bg-black bg-opacity-30 p-4 rounded-lg mb-6">
+                  <div class="text-xl font-semibold text-yellow-300">总天数 <span id="timer4-total-days">0</span> 天</div>
+             </div>
+
+         <div class="text-gray-300 text-sm">
+             <p>现在是 <span id="timer4-current-time" class="font-medium text-white"></span> (GMT+8)</p>
+         </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="mt-6 mb-4 text-center text-sm">
+          <p class="flex items-center justify-center gap-2">记录生活中的每一秒，<span class="font-medium">© 2025-206 豌豆尖</span>，版权所有</p>
+    </footer>
+
+    <script>
+        // 主题切换功能
+        const themeToggle = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        
+        // 初始化主题
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            htmlElement.classList.add('light');
+            updateThemeToggle('dark');
+        } else if (savedTheme === 'dark') {
+            htmlElement.classList.remove('light');
+            updateThemeToggle('light');
+        } else {
+            // 检查系统偏好
+            if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                htmlElement.classList.add('light');
+                updateThemeToggle('dark');
+            }
+        }
+        
+        // 主题切换事件
+        themeToggle.addEventListener('click', () => {
+            const isDark = !htmlElement.classList.contains('light');
+            if (isDark) {
+                htmlElement.classList.add('light');
+                localStorage.setItem('theme', 'light');
+                updateThemeToggle('dark');
+            } else {
+                htmlElement.classList.remove('light');
+                localStorage.setItem('theme', 'dark');
+                updateThemeToggle('light');
+            }
+        });
+        
+        // 更新主题切换按钮图标和标签
+        function updateThemeToggle(toTheme) {
+            const iconElement = themeToggle.querySelector('i');
+            if (toTheme === 'dark') {
+                iconElement.classList.remove('fa-sun');
+                iconElement.classList.add('fa-moon');
+                themeToggle.classList.remove('bg-yellow-400', 'text-gray-900');
+                themeToggle.classList.add('bg-gray-800', 'text-yellow-300');
+                themeToggle.setAttribute('aria-label', '切换到夜间模式');
+            } else {
+                iconElement.classList.remove('fa-moon');
+                iconElement.classList.add('fa-sun');
+                themeToggle.classList.remove('bg-gray-800', 'text-yellow-300');
+                themeToggle.classList.add('bg-yellow-400', 'text-gray-900');
+                themeToggle.setAttribute('aria-label', '切换到白天模式');
+            }
+        }
+        
+         // 动画数字变化 - 现在只对秒应用动画
+         function animateNumberChange(element, newValue, isSecond = false) {
+            // 检查元素是否是总天数元素
+            const isTotalDays = element.id.includes('total-days');
+            
+            if (isTotalDays) {
+                // 对于总天数，只更新数字部分
+                element.textContent = newValue;
+                // 为总天数添加简单的动画效果
+                if (isSecond) {
+                    element.classList.add('number-change');
+                    setTimeout(() => {
+                        element.classList.remove('number-change');
+                    }, 500);
+                }
+            } else {
+                // 创建新的数字元素
+                const newElement = document.createElement('div');
+                newElement.className = `text-3xl font-bold text-white ${isSecond ? 'number-change' : ''}`;
+                newElement.textContent = newValue;
+                
+                // 添加新元素
+                const container = element.parentElement;
+                container.innerHTML = '';
+                container.appendChild(newElement);
+                
+                // 如果是秒，动画结束后移除class
+                if (isSecond) {
+                    setTimeout(() => {
+                        newElement.classList.remove('number-change');
+                    }, 500);
+                }
+            }
+        }
+        
+        // 计算已过去的时间
+        function calculateElapsedTime(targetDate) {
+            const now = new Date();
+            
+            let years = now.getFullYear() - targetDate.getFullYear();
+            let months = now.getMonth() - targetDate.getMonth();
+            let days = now.getDate() - targetDate.getDate();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            
+            // 调整计算逻辑，确保数值正确
+            if (days < 0) {
+                months--;
+                const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+                days += lastDayOfMonth;
+            }
+            
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            return { years, months, days, hours, minutes, seconds };
+        }
+        
+        // 计算剩余时间
+        function calculateRemainingTime(targetDate) {
+            const now = new Date();
+            const diff = targetDate.getTime() - now.getTime();
+            
+            // 检查目标日期是否已过去
+            if (diff <= 0) {
+                return {
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    isPast: true
+                };
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            return { days, hours, minutes, seconds, isPast: false };
+        }
+        
+        // 计算总天数
+        function calculateTotalDays(date1, date2) {
+            const diffTime = Math.abs(date2.getTime() - date1.getTime());
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+        
+        // 设置计时器数据
+        const timers = [
+            {
+                id: 'timer1',
+                targetDate: new Date(2020, 11, 23), // 2020年12月23日
+                type: 'elapsed',
+                showTotalDays: true
+            },
+        {
+            id: 'timer2',
+            targetDate: new Date(2025, 10, 28), // 2025年11月28日
+            type: 'elapsed',
+            showTotalDays: true
+        },
+            {
+                id: 'timer3',
+                targetDate: new Date(1996, 6, 1), // 1996年7月1日
+                type: 'elapsed',
+                showTotalDays: true
+            },
+            {
+                id: 'timer4',
+                targetDate: new Date(1993, 7, 7), // 1993年8月7日
+                type: 'elapsed',
+                showTotalDays: true
+            }
+        ];
+        
+        // 存储上一次的值，用于检测变化
+        const lastValues = {};
+        
+        // 初始化lastValues
+        timers.forEach(timer => {
+            if (timer.type === 'elapsed') {
+                lastValues[timer.id] = { years: 0, months: 0, days: 0, hours: 0, minutes: 0, seconds: 0, totalDays: 0 };
+            } else {
+                lastValues[timer.id] = { days: 0, hours: 0, minutes: 0, seconds: 0 };
+            }
+        });
+        
+        // 更新所有计时器
+        function updateAllTimers() {
+            const now = new Date();
+            
+            timers.forEach(timer => {
+                // 更新当前时间
+                const currentTimeElement = document.getElementById(`${timer.id}-current-time`);
+                if (currentTimeElement) {
+                    currentTimeElement.textContent = now.toLocaleString('zh-CN');
+                }
+                
+                if (timer.type === 'elapsed') {
+                    // 计算已过去的时间
+                    const diff = calculateElapsedTime(timer.targetDate);
+                    
+                         // 检查值是否变化，如果变化则更新
+                        // 只有秒的变化应用动画
+                        if (lastValues[timer.id].years !== diff.years) {
+                            const element = document.querySelector(`#${timer.id}-years div`);
+                            if (element) animateNumberChange(element, diff.years, false);
+                            lastValues[timer.id].years = diff.years;
+                        }
+                        if (lastValues[timer.id].months !== diff.months) {
+                            const element = document.querySelector(`#${timer.id}-months div`);
+                            if (element) animateNumberChange(element, diff.months, false);
+                            lastValues[timer.id].months = diff.months;
+                        }
+                        if (lastValues[timer.id].days !== diff.days) {
+                            const element = document.querySelector(`#${timer.id}-days div`);
+                            if (element) animateNumberChange(element, diff.days, false);
+                            lastValues[timer.id].days = diff.days;
+                        }
+                        if (lastValues[timer.id].hours !== diff.hours) {
+                            const element = document.querySelector(`#${timer.id}-hours div`);
+                            if (element) animateNumberChange(element, diff.hours, false);
+                            lastValues[timer.id].hours = diff.hours;
+                        }
+                        if (lastValues[timer.id].minutes !== diff.minutes) {
+                            const element = document.querySelector(`#${timer.id}-minutes div`);
+                            if (element) animateNumberChange(element, diff.minutes, false);
+                            lastValues[timer.id].minutes = diff.minutes;
+                        }
+                        if (lastValues[timer.id].seconds !== diff.seconds) {
+                            const element = document.querySelector(`#${timer.id}-seconds div`);
+                            if (element) animateNumberChange(element, diff.seconds, true);
+                            lastValues[timer.id].seconds = diff.seconds;
+                        }
+                    
+                    // 显示总天数
+                    if (timer.showTotalDays) {
+                        const totalDays = calculateTotalDays(timer.targetDate, now);
+                        if (lastValues[timer.id].totalDays !== totalDays) {
+                            const totalDaysElement = document.getElementById(`${timer.id}-total-days`);
+                             if (totalDaysElement) animateNumberChange(totalDaysElement, totalDays, false);
+                            lastValues[timer.id].totalDays = totalDays;
+                        }
+                    }
+                } else {
+                    // 计算剩余时间
+                    const diff = calculateRemainingTime(timer.targetDate);
+                    
+                         // 检查值是否变化，如果变化则更新
+                        // 只有秒的变化应用动画
+                        if (lastValues[timer.id].days !== diff.days) {
+                            const element = document.querySelector(`#${timer.id}-days div`);
+                            if (element) animateNumberChange(element, diff.days, false);
+                            lastValues[timer.id].days = diff.days;
+                        }
+                        if (lastValues[timer.id].hours !== diff.hours) {
+                            const element = document.querySelector(`#${timer.id}-hours div`);
+                            if (element) animateNumberChange(element, diff.hours, false);
+                            lastValues[timer.id].hours = diff.hours;
+                        }
+                        if (lastValues[timer.id].minutes !== diff.minutes) {
+                            const element = document.querySelector(`#${timer.id}-minutes div`);
+                            if (element) animateNumberChange(element, diff.minutes, false);
+                            lastValues[timer.id].minutes = diff.minutes;
+                        }
+                        if (lastValues[timer.id].seconds !== diff.seconds) {
+                            const element = document.querySelector(`#${timer.id}-seconds div`);
+                            if (element) animateNumberChange(element, diff.seconds, true);
+                            lastValues[timer.id].seconds = diff.seconds;
+                        }
+                }
+            });
+        }
+        
+        // 初始更新一次所有计时器
+        updateAllTimers();
+        
+        // 设置每秒更新一次计时器
+        setInterval(updateAllTimers, 1000);
+        
+        // 添加页面加载动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const timerCards = document.querySelectorAll('.rounded-xl');
+            timerCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>
