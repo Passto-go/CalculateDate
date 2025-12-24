@@ -11,5 +11,7 @@
 
   祝大家幸福。希望每个人都能找到自己的真爱，愿世界和平。
   
-### P.S.：License（Eclipse Public License 2.0）是随便选的，只是为了看起来规整而已。
+### P.S.：
+
+     License（Eclipse Public License 2.0）是随便选的，只是为了看起来规整而已。
 
