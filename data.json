@@ -1,0 +1,63 @@
+{
+  "items": [
+    {
+      "title": "距离我们一起打怪已经",
+      "date": "2020-12-23",
+      "dateLabel": "2020年12月23日",
+      "icon": "fa-gamepad",
+      "beat": true,
+      "theme": "game-theme",
+      "type": "elapsed",
+      "showTotalDays": true
+    },
+    {
+      "title": "距离你打副本已经",
+      "date": "2025-11-28",
+      "dateLabel": "2025年11月28日",
+      "icon": "fa-dungeon",
+      "theme": "dungeon-theme",
+      "type": "elapsed",
+      "showTotalDays": true
+    },
+    {
+      "title": "距离你破蛋已经",
+      "date": "1996-05-16",
+      "dateLabel": "农历1996年5月16日",
+      "icon": "fa-birthday-cake",
+      "theme": "birthday-theme",
+      "type": "elapsed",
+      "showTotalDays": true,
+      "calendar": "lunar"
+    },
+    {
+      "title": "距离我破蛋已经",
+      "date": "1993-06-20",
+      "dateLabel": "农历1993年6月20日",
+      "icon": "fa-gift",
+      "theme": "birthday2-theme",
+      "type": "elapsed",
+      "showTotalDays": true,
+      "calendar": "lunar"
+    },
+    {
+      "title": "距离你打完副本已经",
+      "date": "",
+      "dateLabel": "日期待定",
+      "icon": "fa-trophy",
+      "theme": "dungeon-theme",
+      "type": "elapsed",
+      "showTotalDays": true,
+      "placeholder": true
+    },
+    {
+      "title": "距离崽破蛋已经",
+      "date": "",
+      "dateLabel": "日期待定",
+      "icon": "fa-egg",
+      "theme": "birthday-theme",
+      "type": "elapsed",
+      "showTotalDays": true,
+      "placeholder": true
+    }
+  ]
+}
