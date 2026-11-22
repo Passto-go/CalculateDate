@@ -56,8 +56,7 @@
       "icon": "fa-egg",
       "theme": "birthday-theme",
       "type": "elapsed",
-      "showTotalDays": true,
-      "placeholder": true
+      "showTotalDays": true
     }
   ]
 }
